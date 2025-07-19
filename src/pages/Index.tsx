@@ -14,11 +14,42 @@ const Index = () => {
   const [toCity, setToCity] = useState('');
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [passengers, setPassengers] = useState(1);
+  const [showLogin, setShowLogin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState('');
 
   const swapCities = () => {
     const temp = fromCity;
     setFromCity(toCity);
     setToCity(temp);
+  };
+
+  const handleLogin = () => {
+    if (isLoggedIn) {
+      setIsLoggedIn(false);
+      setUserName('');
+    } else {
+      setShowLogin(true);
+    }
+  };
+
+  const submitLogin = () => {
+    setIsLoggedIn(true);
+    setUserName('Пользователь');
+    setShowLogin(false);
+  };
+
+  const selectRoute = (route: any) => {
+    setFromCity(route.from);
+    setToCity(route.to);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const popularRoutes = [
@@ -38,13 +69,13 @@ const Index = () => {
             <h1 className="text-2xl font-montserrat font-bold text-gray-900">БусБилет</h1>
           </div>
           <nav className="hidden md:flex space-x-6">
-            <a href="#" className="text-gray-600 hover:text-primary transition-colors">Маршруты</a>
-            <a href="#" className="text-gray-600 hover:text-primary transition-colors">О нас</a>
-            <a href="#" className="text-gray-600 hover:text-primary transition-colors">Контакты</a>
+            <button onClick={() => scrollToSection('routes')} className="text-gray-600 hover:text-primary transition-colors">Маршруты</button>
+            <button onClick={() => scrollToSection('features')} className="text-gray-600 hover:text-primary transition-colors">О нас</button>
+            <button onClick={() => scrollToSection('footer')} className="text-gray-600 hover:text-primary transition-colors">Контакты</button>
           </nav>
-          <Button variant="outline" className="hidden md:block">
+          <Button onClick={handleLogin} variant="outline" className="hidden md:block">
             <Icon name="User" size={16} className="mr-2" />
-            Войти
+            {isLoggedIn ? userName : 'Войти'}
           </Button>
         </div>
       </header>
@@ -176,8 +207,27 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Login Modal */}
+      {showLogin && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <Card className="w-96 p-6">
+            <CardHeader>
+              <CardTitle>Вход в аккаунт</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Input placeholder="Email или телефон" />
+              <Input type="password" placeholder="Пароль" />
+              <div className="flex space-x-2">
+                <Button onClick={submitLogin} className="flex-1">Войти</Button>
+                <Button onClick={() => setShowLogin(false)} variant="outline" className="flex-1">Отмена</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       {/* Popular Routes */}
-      <section className="py-16 bg-white">
+      <section id="routes" className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h3 className="text-3xl font-montserrat font-bold text-gray-900 mb-4">
@@ -216,7 +266,7 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                  <Button className="w-full mt-4" variant="outline">
+                  <Button onClick={() => selectRoute(route)} className="w-full mt-4" variant="outline">
                     Выбрать
                   </Button>
                 </CardContent>
@@ -227,7 +277,7 @@ const Index = () => {
       </section>
 
       {/* Features */}
-      <section className="py-16 bg-gray-50">
+      <section id="features" className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h3 className="text-3xl font-montserrat font-bold text-gray-900 mb-4">
@@ -264,7 +314,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer id="footer" className="bg-gray-900 text-white py-12">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
@@ -280,18 +330,18 @@ const Index = () => {
             <div>
               <h6 className="font-semibold mb-4">Компания</h6>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">О нас</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Вакансии</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Пресс-центр</a></li>
+                <li><button onClick={() => scrollToSection('features')} className="hover:text-white transition-colors">О нас</button></li>
+                <li><button onClick={() => alert('Раздел в разработке')} className="hover:text-white transition-colors">Вакансии</button></li>
+                <li><button onClick={() => alert('Раздел в разработке')} className="hover:text-white transition-colors">Пресс-центр</button></li>
               </ul>
             </div>
 
             <div>
               <h6 className="font-semibold mb-4">Поддержка</h6>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Помощь</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Правила</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Возврат билетов</a></li>
+                <li><button onClick={() => alert('Чат поддержки открыт!')} className="hover:text-white transition-colors">Помощь</button></li>
+                <li><button onClick={() => alert('Правила перевозки и использования сервиса')} className="hover:text-white transition-colors">Правила</button></li>
+                <li><button onClick={() => alert('Возврат билетов: до 3 часов бесплатно, далее 200₽ комиссия')} className="hover:text-white transition-colors">Возврат билетов</button></li>
               </ul>
             </div>
 
@@ -300,11 +350,11 @@ const Index = () => {
               <ul className="space-y-2 text-gray-400">
                 <li className="flex items-center space-x-2">
                   <Icon name="Phone" size={16} />
-                  <span>8 800 555-0123</span>
+                  <button onClick={() => window.open('tel:88005550123')} className="hover:text-white transition-colors">8 800 555-0123</button>
                 </li>
                 <li className="flex items-center space-x-2">
                   <Icon name="Mail" size={16} />
-                  <span>info@busbilet.ru</span>
+                  <button onClick={() => window.open('mailto:info@busbilet.ru')} className="hover:text-white transition-colors">info@busbilet.ru</button>
                 </li>
               </ul>
             </div>
