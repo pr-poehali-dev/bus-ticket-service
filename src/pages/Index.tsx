@@ -158,7 +158,16 @@ const Index = () => {
                 </div>
               </div>
 
-              <Button className="w-full mt-8 h-14 text-lg font-semibold bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 transition-all duration-300">
+              <Button 
+                onClick={() => {
+                  if (!fromCity || !toCity) {
+                    alert('Пожалуйста, укажите город отправления и назначения');
+                    return;
+                  }
+                  alert(`Поиск билетов:\nОткуда: ${fromCity}\nКуда: ${toCity}\nДата: ${date ? format(date, 'dd.MM.yyyy', { locale: ru }) : 'не выбрана'}\nПассажиры: ${passengers}`);
+                }}
+                className="w-full mt-8 h-14 text-lg font-semibold bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 transition-all duration-300"
+              >
                 <Icon name="Search" size={20} className="mr-2" />
                 Найти билеты
               </Button>
