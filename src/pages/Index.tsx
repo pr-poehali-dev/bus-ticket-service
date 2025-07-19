@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,6 +11,7 @@ import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
 const Index = () => {
+  const navigate = useNavigate();
   const [fromCity, setFromCity] = useState('');
   const [toCity, setToCity] = useState('');
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -72,6 +74,7 @@ const Index = () => {
             <button onClick={() => scrollToSection('routes')} className="text-gray-600 hover:text-primary transition-colors">Маршруты</button>
             <button onClick={() => scrollToSection('features')} className="text-gray-600 hover:text-primary transition-colors">О нас</button>
             <button onClick={() => scrollToSection('footer')} className="text-gray-600 hover:text-primary transition-colors">Контакты</button>
+            <button onClick={() => navigate('/admin')} className="text-gray-600 hover:text-primary transition-colors">Админ</button>
           </nav>
           <Button onClick={handleLogin} variant="outline" className="hidden md:block">
             <Icon name="User" size={16} className="mr-2" />
@@ -195,7 +198,14 @@ const Index = () => {
                     alert('Пожалуйста, укажите город отправления и назначения');
                     return;
                   }
-                  alert(`Поиск билетов:\nОткуда: ${fromCity}\nКуда: ${toCity}\nДата: ${date ? format(date, 'dd.MM.yyyy', { locale: ru }) : 'не выбрана'}\nПассажиры: ${passengers}`);
+                  navigate('/search', { 
+                    state: { 
+                      fromCity, 
+                      toCity, 
+                      date: date?.toISOString(), 
+                      passengers 
+                    } 
+                  });
                 }}
                 className="w-full mt-8 h-14 text-lg font-semibold bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 transition-all duration-300"
               >
